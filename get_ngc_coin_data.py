@@ -66,6 +66,11 @@ html = driver.page_source
 soup = BeautifulSoup(html, "html.parser")
 
 coin_data = {}
+raw_coin_description = soup.select_one(
+    'body > div.ccg-canvas > div.ccg-body > div.inner-main > div > div > div.ce-coin__topbar.ng-scope > div > div:nth-child(3) > div.ce-coin__title > h1').text
+desc_w_no_grade = re.sub(r'\s+', " ", raw_coin_description).strip()
+coin_description = f'{desc_w_no_grade}{coin_grade}'.strip()
+coin_data['description'] = coin_description
 data_list = soup.find('ul', {'class': 'ce-coin__specs-list'})
 # first element is the product desc
 # third element is the product mintage
@@ -108,5 +113,4 @@ for image_container in image_containers:
     images.append(image_link)
 
 coin_data['images'] = images
-print(coin_data)
 driver.close()
